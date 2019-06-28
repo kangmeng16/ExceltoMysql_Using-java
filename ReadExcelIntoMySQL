@@ -1,0 +1,44 @@
+try {
+		    	System.out.println("Getting into FileUploadtoDB");
+
+		     Class.forName("com.mysql.jdbc.Driver").newInstance();
+		            Connection con = (Connection) DriverManager.getConnection(url,username,password);
+		            con.setAutoCommit(false);
+		            PreparedStatement pstm = null;
+		          
+		            FileInputStream input = new FileInputStream(filepath);
+		     //       InputStream inp = new FileInputStream(fname);
+		            
+		            System.out.println("Checking path : " + input);
+		 
+		         //   XSSFWorkbook wb = new XSSFWorkbook(filepath); // Declare XSSF WorkBook
+		            XSSFWorkbook wb1 = new XSSFWorkbook(input);
+		            Sheet sheet = wb1.getSheetAt(0);
+		 
+		          System.out.println("Sheet  : " + sheet );
+		      //      System.out.println("sheet " + sheet);
+		            XSSFRow row = null;
+		            System.out.println("row " + row);
+		            for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+		            	System.out.println("Iteration starts here");
+		                row = (XSSFRow) sheet.getRow(i);
+		                System.out.println("row   2 : " + row);
+		                String Process = row.getCell(1).getStringCellValue();
+		                System.out.println("Process " + Process);
+		                String Level = row.getCell(2).getStringCellValue();
+		                String A = row.getCell(3).getStringCellValue();
+		                String B = row.getCell(4).getStringCellValue();
+		                String C = row.getCell(5).getStringCellValue();
+		                System.out.println("Process " + Process ); 
+		                	
+		                String sql = "insert into exceldata(Process, Level, A, B, C) values(?, ?, ?, ?, ?)";
+		                System.out.println("Sql query : " + sql);
+		                pstm = (PreparedStatement) con.prepareStatement(sql);
+		                pstm.setString(1, Process);
+		                pstm.setString(2, Level);
+		                pstm.setString(3, A);
+		                pstm.setString(4, B);
+		                pstm.setString(5, C);
+		                pstm.execute();
+		                System.out.println("Import rows " + i);
+		            }
